@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const session = require("express-session");
 const auctionSchema = require("../schemas/auctionSchema");
 const auctionUserSchema = require("../schemas/auctionUserSchema")
 // const { uid } = require("uid")
@@ -10,28 +11,14 @@ const auctionUserSchema = require("../schemas/auctionUserSchema")
 module.exports = {
 
     register: async (req, res) => {
-        const { name, passOne, passTwo } = req.body
+        const { name, passOne } = req.body
         const userExists = await auctionUserSchema.findOne({ name })
         if (userExists) return res.send({ error: true, message: "This name is allready in use", data: 'badName' })
         const hash = await bcrypt.hash(passOne, 10)
         const user = new auctionUserSchema({ name, pass: hash })
         await user.save()
-        res.send({ error: false, message: null, data: name })
-
-        // const sameUser = users.find(x => x.email === email)
-        // if (sameUser) return res.send({ error: true })
-
-        // users.push({
-        //     email: email,
-        //     password: passOne
-        // })
-        console.log('name ===', name);
-        console.log('passOne ===', passOne);
-        console.log('passTwo ===', passTwo);
-        console.log('hash ===', hash);
-        // console.log(req.body)
-
-        // res.send({ error: false, message: 'received' })
+        req.session.name = name;
+        res.send({ error: false, message: 'session established', data: name })
     },
 
 
@@ -45,6 +32,7 @@ module.exports = {
         if (!correctPassword) return res.send({ error: true, message: "incorrect password", data: null })
         console.log('correctPassword ===', correctPassword);
         req.session.name = name;
+
         console.log('session established')
         res.send({ error: false, message: 'session established', data: name })
 
@@ -60,12 +48,11 @@ module.exports = {
     checksesssion: (req, res) => {
         const name = req.session.name
         console.log(name)
-        name ? res.send({ message: 'yes you are in session', data: name }) : res.send({ message: 'you are not logged in ', data: name })
+        name ? res.send(true) : res.send(false)
 
     },
     validate: (req, res) => {
         const { image, title, time, price } = req.body
-
         const name = req.session.name
         if (!name) return res.send({ error: true, message: 'you are not logged in', data: null })
         res.send(({ error: false, message: null, data: { image, title, time, price } }))
@@ -74,11 +61,10 @@ module.exports = {
         const { image, title, time, price } = req.body
         const name = req.session.name
         if (!name) return res.send({ error: true, message: 'you are not logged in', data: null })
-        const bids = [{ name: 'name', price: 10 }]
         const parsedTime = Date.parse(time)
-        const auction = new auctionSchema({ name, image, title, time: parsedTime, startPrice: price, bids })
+        const auction = new auctionSchema({ name, image, title, time: parsedTime, startPrice: price, })
         await auction.save()
-        res.send(({ error: false, message: 'Auction uploaded', data: { image, title, time, startPrice: price, bids } }))
+        res.send(({ error: false, message: 'Auction uploaded', data: { image, title, time, startPrice: price, } }))
     },
     downloadActual: async (req, res) => {
         console.log('download...')
