@@ -6,6 +6,7 @@ const auctionUserSchema = require("../schemas/auctionUserSchema")
 
 module.exports = {
 
+
     register: async (req, res) => {
         const { name, passOne } = req.body
         const userExists = await auctionUserSchema.findOne({ name })
