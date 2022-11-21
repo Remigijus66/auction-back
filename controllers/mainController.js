@@ -24,13 +24,13 @@ module.exports = {
 
     login: async (req, res) => {
         const { name, pass } = req.body
-        console.log('name ===', name);
-        console.log('pass ===', pass);
+        // console.log('name ===', name);
+        // console.log('pass ===', pass);
         const user = await auctionUserSchema.findOne({ name })
         if (!user) return res.send({ error: true, message: "user not found", data: null })
         const correctPassword = await bcrypt.compare(pass, user.pass);
         if (!correctPassword) return res.send({ error: true, message: "incorrect password", data: null })
-        console.log('correctPassword ===', correctPassword);
+        // console.log('correctPassword ===', correctPassword);
         req.session.name = name;
 
         console.log('session established')
@@ -68,8 +68,9 @@ module.exports = {
     },
     downloadActual: async (req, res) => {
         console.log('download...')
-        let filter = { time: { $gt: Date.parse(new Date) } }
-        const auctions = await auctionSchema.find(filter)
+        // let filter = { time: { $gt: Date.parse(new Date) } }
+        // const auctions = await auctionSchema.find(filter)
+        const auctions = await auctionSchema.find()
         // console.log('auctions', auctions)
         res.send({ messsage: 'OK', data: auctions })
     },
@@ -81,62 +82,5 @@ module.exports = {
         res.send({ messsage: 'OK', data: singleAuction })
     }
 
-    // authSession: (req, res) => {
-    //     const {user} = req.session
-    //     console.log(user)
-    //     res.send({error: !(!!user) })
-    // },
-
-    // createPost: (req, res) => {
-    //     const {url} = req.body
-    //     const {user} = req.session
-
-    //     if(user) {
-    //         posts.push({
-    //             image: url,
-    //             id: uid(),
-    //             user
-    //         })
-
-    //         return res.send({error: false})
-    //     }
-
-    //     res.send({error: true})
-    // },
-    // getPosts: (req, res) => {
-    //     res.send({error: false, posts})
-    // },
-    // getPost: (req, res) => {
-    //     const {id} = req.params
-
-    //     const {user} = req.session
-
-    //     const post = posts.find(x => x.id === id)
-
-    //     const myComments = comments.filter(x => x.id === id)
-
-    //     res.send({error: false, post, loggedIn: !!user, comments: myComments})
-    // },
-    // comment: (req, res) => {
-    //     const {comment, postId} = req.body
-
-    //     const {user} = req.session
-
-    //     if(user) {
-    //         const com = {
-    //             comment,
-    //             user,
-    //             id: postId,
-    //             time: Date.now()
-    //         }
-
-    //         comments.push(com)
-
-    //         const allPostComments = comments.filter(x => x.id === postId)
-    //         return res.send({error: false, comments: allPostComments})
-    //     }
-
-    //     res.send({error: true})
-    // }
 
 }
