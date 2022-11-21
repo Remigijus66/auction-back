@@ -34,6 +34,7 @@ module.exports = {
 
     },
     logout: (req, res) => {
+
         console.log(req)
         req.session.destroy()
         console.log('session terminated')
@@ -62,9 +63,9 @@ module.exports = {
         await auction.save()
         res.send(({ error: false, message: 'Auction uploaded', data: { image, title, time, startPrice: price, } }))
     },
-    downloadActual: async (req, res) => {
-        // const name = req.session.name
-        // if (!name) return res.send({ error: true, message: 'you are not logged in', data: null })
+    downloadAll: async (req, res) => {
+        const name = req.session.name
+        if (!name) return res.send({ error: true, message: 'you are not logged in', data: null })
         const auctions = await auctionSchema.find()
         res.send({ messsage: 'OK', data: auctions })
     },

@@ -9,7 +9,7 @@ const {
     checksesssion,
     validate,
     upload,
-    downloadActual,
+    downloadAll,
     downloadSingle,
     placeBid,
 } = require("../controllers/mainController")
@@ -20,7 +20,7 @@ router.post('/logout', logout)
 router.post('/checksesssion', checksesssion)
 router.post('/validate', validateAuction, validate)
 router.post('/upload', upload)
-router.get('/downloadActual', downloadActual)
+router.post('/downloadAll', downloadAll)
 router.post('/downloadSingle', downloadSingle)
 router.post('/placeBid', placeBid)
 

@@ -22,6 +22,10 @@ module.exports = io => {
       socket.on('upload', () => {
         console.log('upload')
         io.emit('upload', 'upload')
+      }),
+
+      socket.on('dummy', () => {
+        console.log('ping')
       })
   })
 }
