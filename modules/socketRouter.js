@@ -10,15 +10,15 @@ module.exports = io => {
 
     socket.on('singleAuction', async (data) => {
       // const name = req.session.name
-      const name = 'ok'
-      if (name) {
-        socket.join(data)
-        const singleAuction = await auctionSchema.findOne({ _id: data })
-        socket.emit("singleAuction", singleAuction)
-      } else {
-        const singleAuction = {}
-        socket.emit("singleAuction", singleAuction)
-      }
+      // const name = 'ok'
+      // if (name) {
+      socket.join(data)
+      // const singleAuction = await auctionSchema.findOne({ _id: data })
+      socket.emit("singleAuction", data)
+      // } else {
+      //   const singleAuction = {}
+      //   socket.emit("singleAuction", singleAuction)
+      // }
 
     }),
 
@@ -36,11 +36,15 @@ module.exports = io => {
         const singleAuction = await auctionSchema.findOne({ _id: id })
         const filter = { time: { $gt: Date.parse(new Date) } }
         const auctions = await auctionSchema.find(filter)
-        io.in(id).emit("bid", singleAuction)
+        io.in(id).emit("bid", id)
         io.emit('updateList', auctions)
       }),
 
-      socket.on('tick', () => { io.emit('tick', 'tick') })
+      socket.on('tick', () => { io.emit('tick', 'tick') }),
 
+      socket.on('upload', () => {
+        console.log('upload')
+        io.emit('upload', 'upload')
+      })
   })
 }

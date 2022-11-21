@@ -67,11 +67,11 @@ module.exports = {
         res.send(({ error: false, message: 'Auction uploaded', data: { image, title, time, startPrice: price, } }))
     },
     downloadActual: async (req, res) => {
-        console.log('download...')
-        // let filter = { time: { $gt: Date.parse(new Date) } }
-        // const auctions = await auctionSchema.find(filter)
+        // const name = req.session.name
+        // if (!name) return res.send({ error: true, message: 'you are not logged in', data: null })
         const auctions = await auctionSchema.find()
         // console.log('auctions', auctions)
+        // console.log(auctions)
         res.send({ messsage: 'OK', data: auctions })
     },
     downloadSingle: async (req, res) => {
