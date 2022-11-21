@@ -17,7 +17,7 @@ module.exports = io => {
         io.emit('updateList', 'please')
       }),
 
-      socket.on('tick', () => { io.emit('tick', 'tick') }),
+      // socket.on('tick', () => { io.emit('tick', 'tick') }),
 
       socket.on('upload', () => {
         console.log('upload')
