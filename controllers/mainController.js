@@ -2,10 +2,6 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const auctionSchema = require("../schemas/auctionSchema");
 const auctionUserSchema = require("../schemas/auctionUserSchema")
-// const { uid } = require("uid")
-// const users = []
-// const posts = []
-// const comments = []
 
 
 module.exports = {
@@ -70,8 +66,6 @@ module.exports = {
         // const name = req.session.name
         // if (!name) return res.send({ error: true, message: 'you are not logged in', data: null })
         const auctions = await auctionSchema.find()
-        // console.log('auctions', auctions)
-        // console.log(auctions)
         res.send({ messsage: 'OK', data: auctions })
     },
     downloadSingle: async (req, res) => {
@@ -80,6 +74,19 @@ module.exports = {
         if (!name) return res.send({ error: true, message: 'you are not logged in', data: null })
         const singleAuction = await auctionSchema.findOne({ _id: id })
         res.send({ messsage: 'OK', data: singleAuction })
+    },
+
+    placeBid: async (req, res) => {
+        const { id, newPrice, bidderName } = req.body
+        const name = req.session.name
+        if (!name) return res.send({ error: true, message: 'you are not logged in', data: null })
+        const auction = await auctionSchema.findOne({ _id: id })
+        if (auction.bids.length === 0 && newPrice <= auction.startPrice) return
+        if (auction.bids.length > 0 && newPrice <= auction.bids[auction.bids.length - 1].price) return
+        if (Date.parse(new Date) >= auction.time) return
+        const bid = { name: bidderName, price: newPrice }
+        await auctionSchema.findOneAndUpdate({ _id: id }, { $push: { bids: bid } })
+        res.send({ messsage: 'bid placed', data: null })
     }
 
 

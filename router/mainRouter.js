@@ -11,6 +11,7 @@ const {
     upload,
     downloadActual,
     downloadSingle,
+    placeBid,
 } = require("../controllers/mainController")
 
 router.post('/register', validateRegistration, register)
@@ -21,12 +22,7 @@ router.post('/validate', validateAuction, validate)
 router.post('/upload', upload)
 router.get('/downloadActual', downloadActual)
 router.post('/downloadSingle', downloadSingle)
-// router.get('/auth', authSession)
-// router.post('/create', createPost)
-// router.get('/posts', getPosts)
-// router.get('/post/:id', getPost)
-// router.post("/comment", comment)
-
+router.post('/placeBid', placeBid)
 
 
 module.exports = router
